@@ -1,5 +1,5 @@
 /**
- * `dsh-session-delete` browser half.
+ * `session-delete-trash` browser half.
  *
  * Adds one destructive action to the sidebar's Session rows — a `删除会话` row
  * in the row's "..." menu and a trash button among the row's hover actions —
@@ -15,17 +15,17 @@
  *     `sidebar.workspaces.session.menu.item`, `sidebar.workspaces.session.row
  *     .action`, and `shell.overlay` — no DOM patching, no React-fiber reading,
  *     and no assumption about the row component's props;
- *   - the slot ids are namespaced (`session-delete.menu`, `session-delete.row`,
- *     `session-delete.confirm`) and never reuse a shipped id, so nothing
+ *   - the slot ids are namespaced (`session-delete-trash.menu`, `session-delete-trash.row`,
+ *     `session-delete-trash.confirm`) and never reuse a shipped id, so nothing
  *     existing is shadowed;
- *   - the Host is reached over this plugin's own `/api2/dsh-session-delete`
+ *   - the Host is reached over this plugin's own `/api2/session-delete-trash`
  *     route, so no existing route, service, or store is touched.
  *
  * @module dsh-session-delete/client
  */
 
 window.__ModuleLoader__.load({
-	id: 'dsh-session-delete',
+	id: '@jerrrrrywang/dsh-session-delete',
 	factory: (require) => {
 		var module = { exports: {} };
 		var exports = module.exports;
@@ -35,13 +35,13 @@ window.__ModuleLoader__.load({
 		const primitives = require('@deepseek-ai/dsh-client-ui-primitives');
 
 		/** Locale namespace of this plugin's own words. */
-		const NS = 'dsh-session-delete';
+		const NS = 'dsh-session-delete-trash';
 
 		/** Host route the delete action calls. */
-		const DELETE_ROUTE = '/api2/dsh-session-delete/delete';
+		const DELETE_ROUTE = '/api2/session-delete-trash/delete';
 
 		/** Host route that describes what a delete would destroy. */
-		const INSPECT_ROUTE = '/api2/dsh-session-delete/inspect';
+		const INSPECT_ROUTE = '/api2/session-delete-trash/inspect';
 
 		/** Stable identity of the row action's stylesheet, for idempotent injection. */
 		const STYLE_TAG_ID = `${NS}/row-action.css`;
@@ -403,7 +403,7 @@ window.__ModuleLoader__.load({
 					try {
 						props.forgetDeletedSession?.(target);
 					} catch (error) {
-						console.warn('[dsh-session-delete] clearing the main view failed:', error);
+						console.warn('[session-delete-trash] clearing the main view failed:', error);
 					}
 				}).catch((error) => {
 					setBusy(false);
@@ -477,21 +477,21 @@ window.__ModuleLoader__.load({
 
 			ctx.slots.inject('sidebar.workspaces.session.menu.item', () => ctx.slots.register({
 				name: 'sidebar.workspaces.session.menu.item',
-				id: 'session-delete.menu',
+				id: 'session-delete-trash.menu',
 				order: 500,
 				locale: NS,
 			}, DeleteSessionMenuItem));
 
 			ctx.slots.inject('sidebar.workspaces.session.row.action', () => ctx.slots.register({
 				name: 'sidebar.workspaces.session.row.action',
-				id: 'session-delete.row',
+				id: 'session-delete-trash.row',
 				order: 300,
 				locale: NS,
 			}, DeleteSessionRowButton));
 
 			ctx.slots.inject('shell.overlay', () => ctx.slots.register({
 				name: 'shell.overlay',
-				id: 'session-delete.confirm',
+				id: 'session-delete-trash.confirm',
 				locale: NS,
 				inject: () => ({ forgetDeletedSession }),
 			}, DeleteSessionDialog));

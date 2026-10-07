@@ -38,8 +38,8 @@ DSH 自带的会话菜单只有 **重命名 / 分叉会话 / 归档会话**。�
 这是**独立插件**，不修改、不覆盖、不补丁任何现有包：
 
 - **只用官方声明的槽位**：`sidebar.workspaces.session.menu.item`、`sidebar.workspaces.session.row.action`、`shell.overlay`，一律通过 `ctx.slots.inject()` 注册（槽位声明出现才注册，声明折叠就撤掉）。没有 DOM 打补丁，也没有读 React fiber 取会话 ID。
-- **id 全部带命名空间前缀**（`session-delete.menu` / `session-delete.row` / `session-delete.confirm`），**不复用**内置 id（`pin`/`rename`/`fork`/`archive`），因此不会遮蔽任何已有动作。
-- **自有路由**：HTTP 面在 `/api2/dsh-session-delete/{inspect,delete}`，不占用、不覆盖任何现有路由。
+- **id 全部带命名空间前缀**（`session-delete-trash.menu` / `session-delete-trash.row` / `session-delete-trash.confirm`），**不复用**内置 id（`pin`/`rename`/`fork`/`archive`），因此不会遮蔽任何已有动作。
+- **自有路由**：HTTP 面在 `/api2/session-delete-trash/{inspect,delete}`，不占用、不覆盖任何现有路由。
 - **零运行时依赖**：宿主半边只用 `node:` 内建模块；浏览器半边只用 Module Loader 提供的 `react` 与官方 primitives，无需构建步骤。
 - **可选服务一律用 `ctx.get()` 读取**（`agents`、`sessions`、`workspaceRegistry`、`dshHomePath`），缺谁都不影响加载 —— 无头 profile 里它就是一个空操作。
 
@@ -57,6 +57,8 @@ DSH 自带的会话菜单只有 **重命名 / 分叉会话 / 归档会话**。�
 
 ## 安装
 
+**一键安装（推荐）**：在 DSH Web 的**插件市场**里搜 `dsh-session-delete`，或在终端执行 `dsh plugin --profile <profile> add @jerrrrrywang/dsh-session-delete`。
+
 本包是一个 **DSH bundle**（`package.json` 里声明了 `dsh.bundle.patch` → 包内的 `cordis.patch.yml`）。两种装法，**二选一，不要同时用**：
 
 **A. 作为 bundle 安装**（推荐）
@@ -66,11 +68,11 @@ DSH 自带的会话菜单只有 **重命名 / 分叉会话 / 归档会话**。�
 ```json
 {
   "dependencies": {
-    "dsh-session-delete": "link:/Users/jerry/Desktop/DeepSeek工作区/dsh-session-delete"
+    "@jerrrrrywang/dsh-session-delete": "link:/Users/jerry/Desktop/DeepSeek工作区/dsh-session-delete"
   },
   "dsh": {
     "profile": {
-      "bundles": ["...", "dsh-session-delete"]
+      "bundles": ["...", "@jerrrrrywang/dsh-session-delete"]
     }
   }
 }
@@ -85,7 +87,7 @@ DSH 自带的会话菜单只有 **重命名 / 分叉会话 / 归档会话**。�
 ```yaml
 - insert:
     - id: session-delete
-      name: 'dsh-session-delete'
+      name: '@jerrrrrywang/dsh-session-delete'
 ```
 
 ⚠️ 如果 profile 已经把本包装进 `dsh.profile.bundles`，就**不要**再写这行 insert —— 那会加载两次，宿主半边会因路由重复注册而报错。

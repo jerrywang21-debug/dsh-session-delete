@@ -15,5 +15,5 @@
 #   - hand-written row: copy this insert block into the profile's
 #     cordis.patch.yml instead — never both, or the plugin loads twice.
 - insert:
-    - id: session-delete
-      name: 'dsh-session-delete'
+    - id: session-delete-trash
+      name: '@jerrrrrywang/dsh-session-delete'

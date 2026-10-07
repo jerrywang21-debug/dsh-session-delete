@@ -132,8 +132,8 @@ function registryStub(calls) {
 test('mounts exactly its own two routes under its own prefix', () => {
   const host = mountHost({})
   assert.deepEqual([...host.routes.keys()].sort(), [
-    '/api2/dsh-session-delete/delete',
-    '/api2/dsh-session-delete/inspect',
+    '/api2/session-delete-trash/delete',
+    '/api2/session-delete-trash/inspect',
   ])
   for (const route of host.routes.values()) assert.equal(route.kind, 'exact')
 })
@@ -145,7 +145,7 @@ test('a headless profile (no webServer) loads as a no-op', () => {
 
 test('rejects a non-POST, a non-JSON content type, and a foreign Host', async () => {
   const host = mountHost({})
-  const handler = host.routes.get('/api2/dsh-session-delete/delete').handler
+  const handler = host.routes.get('/api2/session-delete-trash/delete').handler
 
   const wrongMethod = response()
   await handler(request({ method: 'GET', body: { sessionId: SESSION_ID } }), wrongMethod)
@@ -177,7 +177,7 @@ test('refuses a running conversation and leaves its storage alone', async () => 
       agents: { get: (id) => (id === SESSION_ID ? { status: 'running' } : undefined) },
     })
     const res = response()
-    await host.routes.get('/api2/dsh-session-delete/delete').handler(
+    await host.routes.get('/api2/session-delete-trash/delete').handler(
       request({ body: { sessionId: SESSION_ID } }),
       res,
     )
@@ -201,7 +201,7 @@ test('moves the log to the Trash, prunes through the service, and announces the 
       agents: { get: () => ({ status: 'idle' }) },
     })
     const res = response()
-    await host.routes.get('/api2/dsh-session-delete/delete').handler(
+    await host.routes.get('/api2/session-delete-trash/delete').handler(
       request({ body: { sessionId: SESSION_ID } }),
       res,
     )
@@ -244,7 +244,7 @@ test('a registry whose service throws falls back to the document', async () => {
       },
     })
     const res = response()
-    await host.routes.get('/api2/dsh-session-delete/delete').handler(
+    await host.routes.get('/api2/session-delete-trash/delete').handler(
       request({ body: { sessionId: SESSION_ID } }),
       res,
     )
@@ -264,7 +264,7 @@ test('a row whose storage is already gone still converges the list', async () =>
   try {
     const host = mountHost({ home })
     const res = response()
-    await host.routes.get('/api2/dsh-session-delete/delete').handler(
+    await host.routes.get('/api2/session-delete-trash/delete').handler(
       request({ body: { sessionId: 'session-00000000-0000-0000-0000-000000000000' } }),
       res,
     )
@@ -286,7 +286,7 @@ test('inspect reports the size without changing anything', async () => {
   try {
     const host = mountHost({ home, sessions: { get: () => ({}) } })
     const res = response()
-    await host.routes.get('/api2/dsh-session-delete/inspect').handler(
+    await host.routes.get('/api2/session-delete-trash/inspect').handler(
       request({ body: { sessionId: SESSION_ID } }),
       res,
     )

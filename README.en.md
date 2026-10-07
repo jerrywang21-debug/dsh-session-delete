@@ -38,8 +38,8 @@ A same-volume move is a `rename` (atomic, instant, inode-preserving). Across dev
 This is a standalone plugin. It does not patch, wrap, replace, or shadow any existing package:
 
 - **Declared seats only** — `sidebar.workspaces.session.menu.item`, `sidebar.workspaces.session.row.action`, and `shell.overlay`, every one registered through `ctx.slots.inject()` (the contribution appears with the seat's declaration and is removed when that declaration collapses). No DOM patching, no reading React fiber props to recover a session id.
-- **Namespaced ids** — `session-delete.menu`, `session-delete.row`, `session-delete.confirm`. No shipped id (`pin` / `rename` / `fork` / `archive`) is reused, so nothing existing is shadowed.
-- **Its own route** — the HTTP surface lives at `/api2/dsh-session-delete/{inspect,delete}`; it claims no existing route.
+- **Namespaced ids** — `session-delete-trash.menu`, `session-delete-trash.row`, `session-delete-trash.confirm`. No shipped id (`pin` / `rename` / `fork` / `archive`) is reused, so nothing existing is shadowed.
+- **Its own route** — the HTTP surface lives at `/api2/session-delete-trash/{inspect,delete}`; it claims no existing route.
 - **Zero runtime dependencies** — the Host half uses `node:` builtins only; the browser half uses the Module Loader's `react` and the official primitives, with no build step.
 - **Every other service is optional**, read with `ctx.get()` (`agents`, `sessions`, `workspaceRegistry`, `dshHomePath`). A profile that serves none loads the plugin as a no-op instead of leaving it PENDING.
 
@@ -57,6 +57,8 @@ Request bodies are capped at 64 KiB. A session id must match `^[A-Za-z0-9][A-Za-
 
 ## Install
 
+**One-click (recommended):** search for `dsh-session-delete` in the DSH Web **plugin market**, or run `dsh plugin --profile <profile> add @jerrrrrywang/dsh-session-delete`.
+
 The package is a **DSH bundle** (`dsh.bundle.patch` → its own `cordis.patch.yml`). Pick **one** of the two ways:
 
 **A. As a bundle (recommended).** Add the package to the profile's `dsh.profile.bundles`, e.g. `~/.dsh/profiles/desktop/package.json`:
@@ -64,11 +66,11 @@ The package is a **DSH bundle** (`dsh.bundle.patch` → its own `cordis.patch.ym
 ```json
 {
   "dependencies": {
-    "dsh-session-delete": "link:/path/to/dsh-session-delete"
+    "@jerrrrrywang/dsh-session-delete": "link:/path/to/dsh-session-delete"
   },
   "dsh": {
     "profile": {
-      "bundles": ["...", "dsh-session-delete"]
+      "bundles": ["...", "@jerrrrrywang/dsh-session-delete"]
     }
   }
 }
@@ -81,7 +83,7 @@ then let pnpm materialize the link (`pnpm install`).
 ```yaml
 - insert:
     - id: session-delete
-      name: 'dsh-session-delete'
+      name: '@jerrrrrywang/dsh-session-delete'
 ```
 
 ⚠️ Do **not** do both — the plugin would load twice and the Host half would refuse the duplicate route.

@@ -11,6 +11,9 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
+// The Module Loader id is the package name; it is asserted through one
+// constant so a rename touches a single line.
+const MODULE_ID = '@jerrrrrywang/dsh-session-delete'
 const SESSION_ID = 'session-12345678-9abc-def0-1234-56789abcdef0'
 
 /** Shipped slot ids this plugin must never shadow. */
@@ -58,7 +61,7 @@ async function loadClient() {
   let spec
   globalThis.window = { __ModuleLoader__: { load(value) { spec = value } } }
   await import(`../client.js?case=${importCounter += 1}`)
-  assert.equal(spec.id, 'dsh-session-delete')
+  assert.equal(spec.id, MODULE_ID)
   const required = []
   const mod = spec.factory((id) => {
     required.push(id)
@@ -114,9 +117,9 @@ test('the half loads, injects only slots and locale, and registers three seats',
     'shell.overlay',
   ])
   assert.deepEqual(made.slots.map((entry) => entry.spec.id), [
-    'session-delete.menu',
-    'session-delete.row',
-    'session-delete.confirm',
+    'session-delete-trash.menu',
+    'session-delete-trash.row',
+    'session-delete-trash.confirm',
   ])
   assert.deepEqual(made.slots.map((entry) => entry.spec.name), made.injected)
 
@@ -124,7 +127,7 @@ test('the half loads, injects only slots and locale, and registers three seats',
   // button lands after the shipped Pin button (order 200).
   assert.equal(made.slots[0].spec.order, 500)
   assert.equal(made.slots[1].spec.order, 300)
-  assert.equal(made.slots[0].spec.locale, 'dsh-session-delete')
+  assert.equal(made.slots[0].spec.locale, 'dsh-session-delete-trash')
 
   // No shipped id is reused, so nothing existing is shadowed.
   for (const entry of made.slots.slice(0, 2)) {
@@ -140,11 +143,11 @@ test('the dictionaries carry the same keys in both languages', async () => {
   mod.apply(made.ctx)
   assert.equal(made.localeRegistrations.length, 1)
   const { namespace, dictionaries } = made.localeRegistrations[0]
-  assert.equal(namespace, 'dsh-session-delete')
+  assert.equal(namespace, 'dsh-session-delete-trash')
   assert.deepEqual(Object.keys(dictionaries.zh).sort(), Object.keys(dictionaries.en).sort())
   for (const value of Object.values(dictionaries.zh)) assert.equal(typeof value, 'string')
   for (const value of Object.values(dictionaries.en)) assert.equal(typeof value, 'string')
-  assert.equal(made.effects.includes('dsh-session-delete: dictionaries'), true)
+  assert.equal(made.effects.includes('dsh-session-delete-trash: dictionaries'), true)
 })
 
 test('the menu row is a destructive MenuItemButton that opens the confirmation', async () => {

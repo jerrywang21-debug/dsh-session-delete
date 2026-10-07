@@ -1,5 +1,5 @@
 {
-  "name": "dsh-session-delete",
+  "name": "@jerrrrrywang/dsh-session-delete",
   "version": "0.1.0",
   "description": "Sidebar delete action for the DeepSeek Harness (DSH) web client: a slot-registered Delete conversation row that removes one conversation from the Harness and moves its log and projection cache to the system Trash.",
   "type": "module",
@@ -8,6 +8,9 @@
     ".": "./index.js",
     "./client": "./client.js",
     "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "files": [
     "index.js",

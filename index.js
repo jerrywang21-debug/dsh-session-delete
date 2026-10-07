@@ -3,7 +3,7 @@
  *
  * Owns the one operation the browser cannot perform: permanently removing one
  * Conversation from disk. It mounts a small JSON surface on the Host Web
- * server (`/api2/dsh-session-delete/<op>`) that the browser half calls. The
+ * server (`/api2/session-delete-trash/<op>`) that the browser half calls. The
  * official `/api` channel is a generated Remote assembly that an out-of-tree
  * plugin has no seat in, so a plugin-owned route is the only available
  * transport.
@@ -50,7 +50,7 @@ import {
 } from './session-store.js'
 
 /** Base path of this plugin's JSON surface. */
-const ROUTE_PREFIX = '/api2/dsh-session-delete'
+const ROUTE_PREFIX = '/api2/session-delete-trash'
 
 /** Operations mounted, one exact route each. */
 const OPERATIONS = ['inspect', 'delete']
@@ -182,7 +182,7 @@ async function pruneRegistryThroughService(ctx, sessionId) {
       if (workspace.sessionIds.includes(sessionId)) await workspace.detachSession(sessionId)
     }
   } catch (error) {
-    ctx.logger?.warn?.(new Error(`dsh-session-delete: workspace registry prune failed: ${String(error)}`))
+    ctx.logger?.warn?.(new Error(`session-delete-trash: workspace registry prune failed: ${String(error)}`))
     pruned = false
   }
   return pruned
@@ -238,7 +238,7 @@ function announceRemoval(ctx, sessionId) {
   try {
     ctx.emit('api-session/removed', sessionId)
   } catch (error) {
-    ctx.logger?.warn?.(new Error(`dsh-session-delete: api-session/removed listener failed: ${String(error)}`))
+    ctx.logger?.warn?.(new Error(`session-delete-trash: api-session/removed listener failed: ${String(error)}`))
   }
 }
 
@@ -256,7 +256,7 @@ function announceConversationDeleted(ctx, sessionId) {
   try {
     ctx.emit('conversation/deleted', sessionId)
   } catch (error) {
-    ctx.logger?.warn?.(new Error(`dsh-session-delete: conversation/deleted listener failed: ${String(error)}`))
+    ctx.logger?.warn?.(new Error(`session-delete-trash: conversation/deleted listener failed: ${String(error)}`))
   }
 }
 
@@ -347,6 +347,6 @@ export function apply(ctx) {
         handler: createHandler(webCtx, op),
       }))
       return () => { for (const dispose of disposers) dispose() }
-    }, 'dsh-session-delete: routes')
+    }, 'session-delete-trash: routes')
   })
 }

@@ -1,0 +1,22 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ['22', '24']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      # The suite has no dependencies: it lays out a real Harness home in a temp
+      # directory, drives the Host half with fake req/res objects, and loads the
+      # browser half through a fake Module Loader. Nothing to install.
+      - run: node --test

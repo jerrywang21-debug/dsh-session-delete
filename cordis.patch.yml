@@ -1,0 +1,19 @@
+# dsh-session-delete bundle patch.
+#
+# This file is the package's own profile layer: adding the package name to the
+# profile's `dsh.profile.bundles` makes DSH apply this patch on top of the base
+# composition, and the one `insert` row below mounts the plugin.
+#
+# The row is a bare plugin by package name: the Node half (exports ".") runs in
+# the Host process and owns the delete route, and the `dsh.client` declaration
+# in package.json makes the browser half (exports "./client") load in the Web
+# GUI.
+#
+# Two mount paths, pick ONE:
+#   - bundle: put "dsh-session-delete" in `dsh.profile.bundles` (recommended,
+#     nothing else to edit);
+#   - hand-written row: copy this insert block into the profile's
+#     cordis.patch.yml instead — never both, or the plugin loads twice.
+- insert:
+    - id: session-delete
+      name: 'dsh-session-delete'

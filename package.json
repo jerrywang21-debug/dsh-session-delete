@@ -1,0 +1,66 @@
+{
+  "name": "dsh-session-delete",
+  "version": "0.1.0",
+  "description": "Sidebar delete action for the DeepSeek Harness (DSH) web client: a slot-registered Delete conversation row that removes one conversation from the Harness and moves its log and projection cache to the system Trash.",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "session-store.js",
+    "client.js",
+    "cordis.patch.yml",
+    "README.md",
+    "README.en.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-primitives",
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-client-ui-workspace"
+      ],
+      "platform": "web"
+    },
+    "engines": {
+      "dsh": ">=0.2.0-rc.2"
+    }
+  },
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [
+    "deepseek",
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "cordis",
+    "plugin",
+    "session",
+    "conversation",
+    "delete",
+    "trash",
+    "sidebar"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jerrywang21-debug/dsh-session-delete.git"
+  },
+  "homepage": "https://github.com/jerrywang21-debug/dsh-session-delete#readme",
+  "bugs": {
+    "url": "https://github.com/jerrywang21-debug/dsh-session-delete/issues"
+  }
+}
